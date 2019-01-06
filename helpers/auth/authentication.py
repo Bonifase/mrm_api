@@ -106,9 +106,7 @@ class Authentication:
                     email = user_data['email']
                     user = User.query.filter_by(email=email).first()
                     headers = {"Authorization": 'Bearer ' + self.get_token()}
-                    data = requests.get(
-                        api_url + "users?email=%s" % user.email,
-                        headers=headers)
+                    data = failed_connection(user, headers, expected_args)
                     response = json.loads(data.content.decode("utf-8"))
 
                     if 'error' in response:
@@ -142,6 +140,22 @@ class Authentication:
             return wrapper
 
         return decorator
+
+
+def failed_connection(*args):
+    """
+    Handle exceptionn raised when internet connection fails.
+    """
+    user, headers, type_api = args
+    message = "Failed internet connection"
+    try:
+        data = requests.get(
+            api_url + "users?email=%s" % user.email, headers=headers)
+    except requests.exceptions.ConnectionError:
+        if 'REST' in type_api:
+            raise JsonError(message=message, status=408)
+        raise GraphQLError(message)
+    return data
 
 
 Auth = Authentication()
