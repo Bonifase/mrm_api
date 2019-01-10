@@ -88,3 +88,42 @@ summary_room_response_data = {
     }
   }
 }
+
+filter_by_response_query = '''
+query{
+    filterRoomsByResponses(lowerLimit:0, upperLimit:2){
+        responses{
+            totalResponses
+            roomName
+            response{
+                responseId
+                missingItems
+            }
+        }
+    }
+}
+'''
+
+filter_by_response_data = {
+    'data': {
+        'filterRoomsByResponses': {
+            'responses': [
+                {
+                    'totalResponses': 2,
+                    'roomName': 'Entebbe',
+                    'response': [
+                        {
+                            'responseId': 2,
+                            'missingItems': ['Markers'],
+                        },
+                        {
+                            'responseId': 1,
+                            'missingItems': [],
+                        }
+
+                    ]
+                }
+            ]
+        }
+    }
+}

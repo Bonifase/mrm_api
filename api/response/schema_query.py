@@ -26,10 +26,20 @@ class AllResponses(graphene.ObjectType):
     responses = graphene.List(RoomResponse)
 
 
+class AllRoomResponses(graphene.ObjectType):
+    responses = graphene.List(RoomResponse)
+
+
 class Query(graphene.ObjectType):
     room_response = graphene.Field(
         RoomResponse, room_id=graphene.Int())
     all_room_responses = graphene.Field(AllResponses)
+
+    filter_rooms_by_responses = graphene.Field(
+        AllRoomResponses,
+        lower_limit=graphene.Int(),
+        upper_limit=graphene.Int(),
+    )
 
     def get_room_response(self, test_response):
         response = []
@@ -78,8 +88,7 @@ class Query(graphene.ObjectType):
                 total_responses=total_response,
                 response=responses)
 
-    @Auth.user_roles('Admin')
-    def resolve_all_room_responses(self, info):
+    def get_all_reponses(self, info):
         response = []
         rooms = RoomModel.query.all()
         for room in rooms:
@@ -93,4 +102,19 @@ class Query(graphene.ObjectType):
                 total_responses=total_response,
                 response=all_responses)
             response.append(responses)
-        return AllResponses(responses=response, room_name=room_name)
+        return (response, room_name)
+
+    @Auth.user_roles('Admin')
+    def resolve_filter_rooms_by_responses(self, info, lower_limit, upper_limit):
+        all_responses, room_name = Query.get_all_reponses(self, info)
+        filtered_responses = []
+        for response in all_responses:
+            reponse_count = response.total_responses
+            if lower_limit <= reponse_count <= upper_limit:
+                filtered_responses.append(response)
+        return AllRoomResponses(responses=filtered_responses)
+
+    @Auth.user_roles('Admin')
+    def resolve_all_room_responses(self, info):
+        responses, room_name = Query.get_all_reponses(self, info)
+        return AllResponses(responses=responses, room_name=room_name)
