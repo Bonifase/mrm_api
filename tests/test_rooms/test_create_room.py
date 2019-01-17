@@ -10,7 +10,9 @@ from fixtures.room.create_room_fixtures import (
     room_mutation_query_duplicate_name,
     room_mutation_query_duplicate_name_response,
     room_invalid_calendar_id_mutation_query,
-    room_invalid_calendar_id_mutation_response)
+    room_invalid_calendar_id_mutation_response,
+    increment_total_room_feedback_mutation,
+    increment_total_room_feedback_mutation_with_wrong_roomId)
 from fixtures.room.create_room_in_block_fixtures import (
     room_blockId_not_required_mutation
     )
@@ -100,4 +102,33 @@ class TestCreateRoom(BaseTestCase):
             self,
             room_invalid_calendar_id_mutation_query,
             room_invalid_calendar_id_mutation_response
+        )
+
+    def test_increment_total_room_feedback(self):
+        """
+        Testing for incrementing the number of views
+        for a room's feedback qustion
+
+        """
+        CommonTestCases.user_token_assert_in(
+            self,
+            increment_total_room_feedback_mutation,
+            '1'
+        )
+        CommonTestCases.user_token_assert_in(
+            self,
+            increment_total_room_feedback_mutation,
+            '2'
+        )
+
+    def test_fail_to_increment_total_room_feedback(self):
+        """
+        Testing for incrementing the number of views
+        for a room's feedback qustion
+
+        """
+        CommonTestCases.user_token_assert_in(
+            self,
+            increment_total_room_feedback_mutation_with_wrong_roomId,
+            'Non-existent room id'
         )

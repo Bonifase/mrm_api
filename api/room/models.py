@@ -21,6 +21,7 @@ class Room(Base, Utility):
     capacity = Column(Integer, nullable=False)
     image_url = Column(String)
     calendar_id = Column(String)
+    total_room_feedback_views = Column(Integer, default=0)
     floor_id = Column(Integer, ForeignKey('floors.id'))
     wing_id = Column(Integer, ForeignKey('wings.id'))
     cancellation_duration = Column(Integer, default=10)

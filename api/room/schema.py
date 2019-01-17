@@ -147,7 +147,32 @@ class DeleteRoom(graphene.Mutation):
         return DeleteRoom(room=exact_room)
 
 
+class IncrementTotalRoomFeedbackView(graphene.Mutation):
+
+    class Arguments:
+        room_id = graphene.Int(required=True)
+    room = graphene.Field(Room)
+
+    def mutate(self, info, **kwargs):
+        validate_empty_fields(**kwargs)
+        query = Room.get_query(info)
+        exact_room = query.filter_by(id=kwargs['room_id']).first()
+        if not exact_room:
+            raise GraphQLError("Non-existent room id")
+
+        if exact_room.total_room_feedback_views:
+            new_total_feedback_view = exact_room.total_room_feedback_views + 1
+        if not exact_room.total_room_feedback_views:
+            new_total_feedback_view = 1
+        update_entity_fields(
+            exact_room, total_room_feedback_views=new_total_feedback_view
+        )
+        exact_room.save()
+        return IncrementTotalRoomFeedbackView(room=exact_room)
+
+
 class Mutation(graphene.ObjectType):
     create_room = CreateRoom.Field()
     update_room = UpdateRoom.Field()
     delete_room = DeleteRoom.Field()
+    increment_room_feedback = IncrementTotalRoomFeedbackView.Field()

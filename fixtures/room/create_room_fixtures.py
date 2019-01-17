@@ -280,3 +280,31 @@ room_mutation_query_duplicate_name_response = {
             "createRoom": null
         }
     }
+
+increment_total_room_feedback_mutation = '''
+    mutation {
+        incrementRoomFeedback(roomId: 1) {
+            room {
+                name
+                roomType
+                capacity
+                floorId
+                totalRoomFeedbackViews
+            }
+        }
+    }
+    '''
+
+increment_total_room_feedback_mutation_with_wrong_roomId = '''
+    mutation {
+        incrementRoomFeedback(roomId: 4) {
+            room {
+                name
+                roomType
+                capacity
+                floorId
+                totalRoomFeedbackViews
+            }
+        }
+    }
+    '''
