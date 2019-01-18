@@ -17,7 +17,6 @@ class CreateDevice(graphene.Mutation):
         name = graphene.String(required=True)
         device_type = graphene.String(required=True)
         location = graphene.String()
-        resource_id = graphene.Int(required=True)
     device = graphene.Field(Devices)
 
     def mutate(self, info, **kwargs):
@@ -37,7 +36,6 @@ class UpdateDevice(graphene.Mutation):
         name = graphene.String()
         device_type = graphene.String()
         location = graphene.String()
-        resource_id = graphene.Int()
     device = graphene.Field(Devices)
 
     def mutate(self, info, device_id, **kwargs):

@@ -4,7 +4,6 @@ query_devices = '''
         {
         allDevices{
             id
-            resourceId
             lastSeen
             dateAdded
             name
@@ -18,7 +17,6 @@ expected_response_devices = {
                                     "allDevices": [
                                         {
                                             "id": "1",
-                                            "resourceId": 1,
                                             "lastSeen": "2018-06-08T11:17:58.785136",  # noqa: E501
                                             "dateAdded": "2018-06-08T11:17:58.785136",  # noqa: E501
                                             "name": "Samsung",
@@ -35,7 +33,6 @@ create_devices_query = '''
                 name:"Apple tablet",
                 deviceType:"External Display",
                 location:"Kenya",
-                resourceId:1
             ){
                 device{
                 name

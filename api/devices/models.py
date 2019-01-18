@@ -1,5 +1,4 @@
-from sqlalchemy import (Column, String, Integer, DateTime, ForeignKey)
-from sqlalchemy.orm import relationship
+from sqlalchemy import (Column, String, Integer, DateTime)
 from sqlalchemy.schema import Sequence
 
 from helpers.database import Base
@@ -15,8 +14,6 @@ class Devices(Base, Utility):
     date_added = Column(DateTime, nullable=False)
     last_seen = Column(DateTime, nullable=False)
     location = Column(String, nullable=False)
-    resource_id = Column(Integer, ForeignKey('resources.id'))
-    resource = relationship('Resource')
 
     def __init__(self, **kwargs):
         validate_empty_fields(**kwargs)
@@ -26,4 +23,3 @@ class Devices(Base, Utility):
         self.date_added = kwargs['date_added']
         self.last_seen = kwargs['last_seen']
         self.location = kwargs['location']
-        self.resource_id = kwargs['resource_id']
