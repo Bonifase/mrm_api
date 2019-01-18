@@ -88,7 +88,7 @@ class Query(graphene.ObjectType):
 
     def resolve_all_blocks(self, info):
         query = Block.get_query(info)
-        return query.all()
+        return query.order_by(BlockModel.name).all()
 
     def resolve_get_rooms_in_a_block(self, info, block_id):
         query = Room.get_query(info)

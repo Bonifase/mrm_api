@@ -93,10 +93,10 @@ class PaginatedRooms(Paginate):
         query = Room.get_query(info)
         exact_query = room_filter(query, filter_data)
         if not page:
-            return exact_query.all()
+            return exact_query.order_by(RoomModel.name).all()
         page = validate_page(page)
         self.query_total = exact_query.count()
-        result = exact_query.limit(per_page).offset(page*per_page)
+        result = exact_query.order_by(RoomModel.name).limit(per_page).offset(page*per_page)
         if result.count() == 0:
             return GraphQLError("No more resources")
         return result
